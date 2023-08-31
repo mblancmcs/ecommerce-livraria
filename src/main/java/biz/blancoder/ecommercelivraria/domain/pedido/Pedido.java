@@ -1,6 +1,8 @@
 package biz.blancoder.ecommercelivraria.domain.pedido;
 
+import biz.blancoder.ecommercelivraria.domain.livroPedido.DadosListagemLivroPedido;
 import biz.blancoder.ecommercelivraria.domain.livroPedido.LivroPedido;
+import biz.blancoder.ecommercelivraria.domain.usuario.DadosListagemUsuario;
 import biz.blancoder.ecommercelivraria.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,8 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<LivroPedido> livroPedido;
 
+    private Boolean ativo;
+
     public Pedido(Usuario usuario) {
         this.usuario = usuario;
     }
@@ -41,6 +45,22 @@ public class Pedido {
         livro.setPedido(this);
         this.livroPedido.add(livro);
         this.valorTotal = this.valorTotal.add(livro.getValorLivros());
+    }
+
+    public void exclusaoLogica() {
+        this.ativo = false;
+    }
+
+    public DadosListagemUsuario retornaListagemUsuario() {
+        return new DadosListagemUsuario(this.usuario);
+    }
+
+    public String retornaListagemLivrosPedido() {
+        String json = "";
+        for(LivroPedido livro : this.livroPedido) {
+            json += new DadosListagemLivroPedido(livro).toString();
+        }
+        return json;
     }
 
 }

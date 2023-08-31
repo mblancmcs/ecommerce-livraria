@@ -1,6 +1,5 @@
 package biz.blancoder.ecommercelivraria.domain.livro;
 
-import biz.blancoder.ecommercelivraria.domain.livroUsuario.LivroUsuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -8,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Table(name = "livros")
@@ -29,5 +27,35 @@ public class Livro {
     private BigDecimal preco;
     private String descricao;
     private Boolean ativo;
+
+    public Livro(DadosCadastroLivro dados) {
+        this.titulo = dados.titulo();
+        this.categoria = dados.categoria();
+        this.preco = dados.preco();
+        this.descricao = dados.descricao();
+    }
+
+    public void atualizarInformacoes(DadosAtualizarLivro dados) {
+        if(dados.titulo() != null) {
+            this.titulo = dados.titulo();
+        }
+        if(dados.categoria() != null) {
+            this.categoria = dados.categoria();
+        }
+        if(dados.preco() != null) {
+            this.preco = dados.preco();
+        }
+        if(dados.descricao() != null) {
+            this.descricao = dados.descricao();
+        }
+    }
+
+    public void exclusaoLogica() {
+        this.ativo = false;
+    }
+
+    public DadosListagemLivro retornaListagemLivro() {
+        return new DadosListagemLivro(this);
+    }
 
 }

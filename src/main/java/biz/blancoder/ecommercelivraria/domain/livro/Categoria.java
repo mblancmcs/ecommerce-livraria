@@ -8,6 +8,7 @@ public enum Categoria {
     AUTO_AJUDA,
     ACADEMICO,
     FICCAO,
-    FICCAO_INFANTO_JUVENIL;
+    FICCAO_INFANTO_JUVENIL,
+    OUTROS;
 
 }

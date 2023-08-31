@@ -24,6 +24,7 @@ public class LivroUsuario {
     private String comentario;
     private Integer avaliacao;
     private LocalDateTime data = LocalDateTime.now();
+    private String perfilUsuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_livro")
@@ -34,5 +35,31 @@ public class LivroUsuario {
     private Usuario usuario;
 
     private Boolean ativo;
+
+    public LivroUsuario(DadosCadastroLivroUsuario dados) {
+        if(dados.comentario() != null) {
+            this.comentario = dados.comentario();
+        }
+        if(dados.avaliacao() != null) {
+            this.avaliacao = dados.avaliacao();
+        }
+        this.data = LocalDateTime.now();
+        this.perfilUsuario = dados.usuario().getPerfil();
+        this.usuario = dados.usuario();
+        this.livro = dados.livro();
+    }
+
+    public void atualizarInformacoes(DadosAtualizarLivroUsuario dados) {
+        if(dados.avaliacao() != null) {
+            this.avaliacao = dados.avaliacao();
+        }
+        if(dados.comentario() != null) {
+            this.comentario = dados.comentario();
+        }
+    }
+
+    public void exclusaoLogica() {
+        this.ativo = false;
+    }
 
 }

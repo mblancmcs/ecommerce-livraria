@@ -1,6 +1,8 @@
 package biz.blancoder.ecommercelivraria.domain.livroPedido;
 
+import biz.blancoder.ecommercelivraria.domain.livro.DadosListagemLivro;
 import biz.blancoder.ecommercelivraria.domain.livro.Livro;
+import biz.blancoder.ecommercelivraria.domain.pedido.DadosListagemPedido;
 import biz.blancoder.ecommercelivraria.domain.pedido.Pedido;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,11 +34,11 @@ public class LivroPedido {
     @JoinColumn(name = "id_pedido")
     private Pedido pedido;
 
-    public LivroPedido(Integer quantidade, Pedido pedido, Livro livro) {
-        this.quantidade = quantidade;
-        this.pedido = pedido;
-        this.livro = livro;
-        this.precoUnitario = livro.getPreco();
+    public LivroPedido(DadosCadastroLivroPedido dados) {
+        this.quantidade = dados.quantidade();
+        this.pedido = dados.pedido();
+        this.livro = dados.livro();
+        this.precoUnitario = dados.livro().getPreco();
     }
 
     public void setPedido(Pedido pedido) {
@@ -45,6 +47,14 @@ public class LivroPedido {
 
     public BigDecimal getValorLivros() {
         return precoUnitario.multiply(new BigDecimal(quantidade));
+    }
+
+    public DadosListagemPedido retornaListagemPedido() {
+        return new DadosListagemPedido(this.pedido);
+    }
+
+    public DadosListagemLivro retornaListagemLivro() {
+        return new DadosListagemLivro(this.livro);
     }
 
 }

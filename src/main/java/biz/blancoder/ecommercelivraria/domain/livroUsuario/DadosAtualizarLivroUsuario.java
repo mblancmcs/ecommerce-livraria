@@ -1,4 +1,11 @@
 package biz.blancoder.ecommercelivraria.domain.livroUsuario;
 
-public record DadosAtualizarLivroUsuario() {
+import jakarta.validation.constraints.NotNull;
+
+public record DadosAtualizarLivroUsuario(
+        @NotNull
+        Integer id,
+        String comentario,
+        Integer avaliacao
+) {
 }

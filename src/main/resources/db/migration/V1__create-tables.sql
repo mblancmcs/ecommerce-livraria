@@ -9,10 +9,10 @@ CREATE TABLE usuarios (
     cidade varchar(30) not null,
     uf char(2) not null,
     cep int not null,
-    complemento varchar(255) not null,
+    complemento varchar(255) null,
     login varchar(30) not null unique,
-    password varchar(30) null,
-    role varchar(30) not null default 'USER',
+    password varchar(255) null,
+    perfil varchar(30) not null default 'CLIENTE',
     ativo tinyint not null default true
 );
 
@@ -30,6 +30,7 @@ CREATE TABLE pedidos (
     valor_total float(9,2) not null default 0.00,
     data datetime not null default current_timestamp,
     id_usuario int not null,
+    ativo tinyint not null default true,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 );
 
@@ -38,6 +39,7 @@ CREATE TABLE livros_usuarios (
     comentario text null,
     avaliacao int null,
     data datetime not null default current_timestamp,
+    perfil_usuario varchar(30) not null,
     id_livro int not null,
     id_usuario int not null,
     ativo tinyint not null default true,
