@@ -8,13 +8,15 @@ public record DadosDetalhesUsuario(
         Integer id,
         String nome,
         Long cpf,
+        String email,
         List<String> telefones,
-        DadosEndereco dadosEndereco,
+        DadosEndereco endereco,
         String login,
-        String perfil
+        PerfilUsuario perfil
 ) {
 
     public DadosDetalhesUsuario(Usuario usuario) {
-        this(usuario.getId(), usuario.getNome(),usuario.getCpf(), usuario.getTelefones(), usuario.retornaEndereco(), usuario.getLogin(), usuario.getPerfil());
+        this(usuario.getId(), usuario.getNome(),usuario.getCpf(), usuario.getEmail(), usuario.getTelefones(),
+                usuario.retornaEndereco(), usuario.getLogin(), usuario.getPerfil());
     }
 }

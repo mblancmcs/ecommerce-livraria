@@ -7,7 +7,8 @@ public record DadosAtualizarUsuario(
         @NotNull
         Integer id,
         String nome,
+        String email,
         String telefones,
-        DadosEndereco dadosEndereco
+        DadosEndereco endereco
 ) {
 }

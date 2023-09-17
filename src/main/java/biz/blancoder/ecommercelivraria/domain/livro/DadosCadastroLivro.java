@@ -13,8 +13,6 @@ public record DadosCadastroLivro(
         Categoria categoria,
         @NotNull
         BigDecimal preco,
-        String descricao,
-        @NotNull
-        Usuario usuario
+        String descricao
 ) {
 }

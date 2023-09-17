@@ -1,19 +1,19 @@
 package biz.blancoder.ecommercelivraria.domain.livro;
 
+import biz.blancoder.ecommercelivraria.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-@Entity
+@Entity(name = "Livro")
 @Table(name = "livros")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
+@ToString
 public class Livro {
 
     @Id
@@ -24,8 +24,9 @@ public class Livro {
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
-    private BigDecimal preco;
+    private BigDecimal preco = new BigDecimal(0);
     private String descricao;
+    private LocalDate dataCadastro;
     private Boolean ativo;
 
     public Livro(DadosCadastroLivro dados) {
@@ -33,6 +34,8 @@ public class Livro {
         this.categoria = dados.categoria();
         this.preco = dados.preco();
         this.descricao = dados.descricao();
+        this.dataCadastro = LocalDate.now();
+        this.ativo = true;
     }
 
     public void atualizarInformacoes(DadosAtualizarLivro dados) {

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Entity
+@Entity(name = "Usuario")
 @Table(name = "usuarios")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +26,7 @@ public class Usuario {
     private Integer id;
     private String nome;
     private Long cpf;
+    private String email;
 
     @Convert(converter = StringListConverter.class)
     private List<String> telefones = new ArrayList<>();
@@ -35,17 +36,22 @@ public class Usuario {
 
     private String login;
     private String password;
-    private String perfil;
+
+    @Enumerated(EnumType.STRING)
+    private PerfilUsuario perfil;
+
     private Boolean ativo;
 
     public Usuario(DadosCadastroUsuario dados) {
         this.nome = dados.nome();
         this.cpf = dados.cpf();
         this.telefones = Arrays.asList(dados.telefones().split(";"));
-        this.endereco = new Endereco(dados.dadosCadastroEndereco());
+        this.email = dados.email();
+        this.endereco = new Endereco(dados.endereco());
         this.login = dados.login();
         this.password = dados.password();
         this.perfil = dados.perfil();
+        this.ativo = true;
     }
 
     public void atualizarInformacoes(DadosAtualizarUsuario dados) {
@@ -55,8 +61,11 @@ public class Usuario {
         if(dados.telefones() != null) {
             this.telefones = Arrays.asList(dados.telefones().split(";"));
         }
-        if(dados.dadosEndereco() != null) {
-            this.endereco.atualizarInformacoes(dados.dadosEndereco());
+        if(dados.email() != null) {
+            this.email = dados.email();
+        }
+        if(dados.endereco() != null) {
+            this.endereco.atualizarInformacoes(dados.endereco());
         }
     }
 
@@ -64,9 +73,9 @@ public class Usuario {
         this.ativo = false;
     }
 
-    public DadosListagemUsuario retornaListagemUsuario() {
-        return new DadosListagemUsuario(this);
-    }
+//    public DadosListagemUsuario retornaListagemUsuario() {
+//        return new DadosListagemUsuario(this);
+//    }
 
     public DadosEndereco retornaEndereco() {
         return new DadosEndereco(this.endereco);

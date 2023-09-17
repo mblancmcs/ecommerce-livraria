@@ -3,6 +3,7 @@ CREATE TABLE usuarios (
     nome varchar(70) not null,
     cpf bigint not null,
     telefones varchar(255) not null,
+    email varchar(255) not null,
     logradouro varchar(255) not null,
     numero int not null,
     bairro varchar(30) not null,
@@ -11,7 +12,7 @@ CREATE TABLE usuarios (
     cep int not null,
     complemento varchar(255) null,
     login varchar(30) not null unique,
-    password varchar(255) null,
+    password varchar(255) not null,
     perfil varchar(30) not null default 'CLIENTE',
     ativo tinyint not null default true
 );
@@ -19,16 +20,19 @@ CREATE TABLE usuarios (
 CREATE TABLE livros (
 	id int not null auto_increment primary key,
     titulo varchar(100) not null,
-    categoria varchar(30) not null default 'nao identificada',
+    categoria varchar(30) not null default 'OUTROS',
     preco float(8,2) not null default 0.00,
     descricao text null,
+    data_cadastro date not null,
     ativo tinyint not null default true
 );
 
 CREATE TABLE pedidos (
 	id int not null auto_increment primary key,
+	id_gateway varchar(52) null,
     valor_total float(9,2) not null default 0.00,
     data datetime not null default current_timestamp,
+    status varchar(30) not null,
     id_usuario int not null,
     ativo tinyint not null default true,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
@@ -36,10 +40,9 @@ CREATE TABLE pedidos (
 
 CREATE TABLE livros_usuarios (
 	id int not null auto_increment primary key,
-    comentario text null,
-    avaliacao int null,
-    data datetime not null default current_timestamp,
-    perfil_usuario varchar(30) not null,
+    avaliacao text null,
+    nota float(4,2) null,
+    data_aquisicao datetime not null default current_timestamp,
     id_livro int not null,
     id_usuario int not null,
     ativo tinyint not null default true,

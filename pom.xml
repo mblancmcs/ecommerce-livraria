@@ -59,6 +59,27 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>PagarmeApiSDKLib</groupId>
+			<artifactId>pagarme-api-sdklib</artifactId>
+			<version>6.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.apimatic</groupId>
+			<artifactId>core-interfaces</artifactId>
+			<version>[0.1, 0.2)</version>
+		</dependency>
+		<dependency>
+			<groupId>io.apimatic</groupId>
+			<artifactId>core</artifactId>
+			<version>[0.4, 0.5)</version>
+		</dependency>
+		<dependency>
+			<groupId>io.apimatic</groupId>
+			<artifactId>okhttp-client-adapter</artifactId>
+			<version>[0.1, 0.2)</version>
+		</dependency>
 	</dependencies>
 
 	<build>

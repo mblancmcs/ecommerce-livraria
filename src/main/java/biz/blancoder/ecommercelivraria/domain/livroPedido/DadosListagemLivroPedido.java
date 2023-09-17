@@ -9,12 +9,11 @@ public record DadosListagemLivroPedido(
         Integer id,
         BigDecimal precoUnitario,
         Integer quantidade,
-        DadosListagemLivro dadosListagemLivro,
-        DadosListagemPedido dadosListagemPedido
+        DadosListagemLivro dadosListagemLivro
 ) {
 
     public DadosListagemLivroPedido(LivroPedido livroPedido) {
-        this(livroPedido.getId(), livroPedido.getPrecoUnitario(), livroPedido.getQuantidade(), livroPedido.retornaListagemLivro(), livroPedido.retornaListagemPedido());
+        this(livroPedido.getId(), livroPedido.getPrecoUnitario(), livroPedido.getQuantidade(), livroPedido.retornaListagemLivro());
     }
 
 }
