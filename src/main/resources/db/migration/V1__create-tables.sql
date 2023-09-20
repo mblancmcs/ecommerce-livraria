@@ -23,6 +23,7 @@ CREATE TABLE livros (
     categoria varchar(30) not null default 'OUTROS',
     preco float(8,2) not null default 0.00,
     descricao text null,
+    isbn bigint not null,
     data_cadastro date not null,
     ativo tinyint not null default true
 );

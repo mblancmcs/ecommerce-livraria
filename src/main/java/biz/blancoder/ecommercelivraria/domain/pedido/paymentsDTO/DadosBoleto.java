@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 public record DadosBoleto(
         @NotNull
         String banco,
-        @Pattern(regexp = "\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\b")
+        @Pattern(regexp = "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")
         String dataVencimento,
         String instrucoes) {
 }

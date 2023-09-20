@@ -21,7 +21,7 @@ public record DadosCadastroUsuario(
         String login,
         @NotBlank
         String password,
-        @NotNull
+
         PerfilUsuario perfil
 ) {
 }

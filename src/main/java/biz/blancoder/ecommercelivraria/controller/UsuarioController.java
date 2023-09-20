@@ -6,20 +6,25 @@ import biz.blancoder.ecommercelivraria.domain.livroUsuario.DadosAtualizarLivroUs
 import biz.blancoder.ecommercelivraria.domain.livroUsuario.DadosListagemLivroUsuario;
 import biz.blancoder.ecommercelivraria.domain.livroUsuario.LivroUsuarioRepository;
 import biz.blancoder.ecommercelivraria.domain.usuario.*;
+import biz.blancoder.ecommercelivraria.domain.usuario.validadoresClientes.ValidarCliente;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
+@SecurityRequirement(name = "bearer-key")
 public class UsuarioController {
 
     @Autowired
@@ -31,12 +36,17 @@ public class UsuarioController {
     @Autowired
     private LivroUsuarioRepository livroUsuarioRepository;
 
+    @Autowired
+    private List<ValidarCliente> validadoresClientes;
+
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping
     public ResponseEntity<Page<DadosListagemUsuario>> listar(@PageableDefault(size = 10, sort = "nome")Pageable paginacao) {
         var paginaUsuario = usuarioRepository.findAllByAtivoTrue(paginacao).map(DadosListagemUsuario::new);
         return ResponseEntity.ok(paginaUsuario);
     }
 
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping("/cpf={cpf}")
     public ResponseEntity<DadosListagemUsuario> listarPorCpf(@PathVariable Long cpf) {
         if(!usuarioRepository.existsByCpfAndAtivoTrue(cpf)) {
@@ -46,45 +56,52 @@ public class UsuarioController {
         return ResponseEntity.ok(new DadosListagemUsuario(usuario));
     }
 
-    @PostMapping
-    @Transactional
-    public ResponseEntity<DadosDetalhesUsuario> cadastrar(@RequestBody @Valid DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
-        if(usuarioRepository.existsByLogin(dados.login())) {
-            throw new ValidacaoException("Ja existe um usuario com esse login");
-        }
-        var usuario = new Usuario(dados);
-        usuarioRepository.save(usuario);
-        var uri = uriBuilder.path("/usuario/id={id}").buildAndExpand(usuario.getId()).toUri();
-        return ResponseEntity.created(uri).body(new DadosDetalhesUsuario(usuario));
+    @Secured({"ROLE_CLIENTE", "ROLE_FUNCIONARIO"})
+    @GetMapping("/id={id}")
+    public ResponseEntity<DadosListagemUsuario> listarPorId(@PathVariable Integer id) {
+        validadoresClientes.forEach(validador -> validador.validarCliente(id));
+        var usuario = usuarioRepository.findByIdAndAtivoTrue(id);
+        return ResponseEntity.ok(new DadosListagemUsuario(usuario));
     }
 
+    @Secured({"ROLE_CLIENTE", "ROLE_FUNCIONARIO"})
     @PutMapping
     @Transactional
     public ResponseEntity<DadosListagemUsuario> atualizar(@RequestBody @Valid DadosAtualizarUsuario dados) {
-        if(!usuarioRepository.existsByIdAndAtivoTrue(dados.id())) {
-            throw new ValidacaoException("Id do usuario inexistente ou já inativo");
-        }
+        validadoresClientes.forEach(validador -> validador.validarCliente(dados.id()));
         var usuario = usuarioRepository.getReferenceById(dados.id());
         usuario.atualizarInformacoes(dados);
         return ResponseEntity.ok(new DadosListagemUsuario(usuario));
     }
 
+    @Secured({"ROLE_CLIENTE", "ROLE_FUNCIONARIO"})
     @DeleteMapping("/id={id}")
     @Transactional
     public ResponseEntity inativarUsuario(@PathVariable Integer id) {
-        if(!usuarioRepository.existsByIdAndAtivoTrue(id)) {
-            throw new ValidacaoException("Id do usuario inexistente ou já inativo");
-        }
+        validadoresClientes.forEach(validador -> validador.validarCliente(id));
         var usuario = usuarioRepository.getReferenceById(id);
         usuario.exclusaoLogica();
         return ResponseEntity.noContent().build();
     }
 
-//    @GetMapping("/livro_usuario")
-//    public ResponseEntity listarLivros() {
-//        List<DadosListagemLivroUsuario> listaLivros = livroUsuarioRepository.findAllByUsuarioId();
-//    }
+    @Secured("ROLE_FUNCIONARIO")
+    @GetMapping("/livro_usuario")
+    public ResponseEntity<Page<DadosListagemLivroUsuario>> listarLivrosUsuarios(@PageableDefault(size = 10, sort = "id",
+            direction = Sort.Direction.DESC) Pageable paginacao) {
+        var paginaLivrosUsuarios = livroUsuarioRepository.findAllByAtivoTrue(paginacao).map(DadosListagemLivroUsuario::new);
+        return ResponseEntity.ok(paginaLivrosUsuarios);
+    }
 
+    @Secured({"ROLE_CLIENTE", "ROLE_FUNCIONARIO"})
+    @GetMapping("/livro_usuario/id={idUsuario}")
+    public ResponseEntity<Page<DadosListagemLivroUsuario>> listarLivros(@PageableDefault(size = 10, sort = "livro.titulo") Pageable paginacao,
+                                                                        @PathVariable Integer idUsuario) {
+        validadoresClientes.forEach(validador -> validador.validarCliente(idUsuario));
+        var paginaLivrosUsuario = livroUsuarioRepository.findAllByUsuarioId(idUsuario, paginacao).map(DadosListagemLivroUsuario::new);
+        return ResponseEntity.ok(paginaLivrosUsuario);
+    }
+
+    @Secured("ROLE_CLIENTE")
     @PutMapping("/livro_usuario/avaliacao")
     @Transactional
     public ResponseEntity avaliarLivro(@RequestBody @Valid DadosAtualizarLivroUsuario dados) {
@@ -92,10 +109,18 @@ public class UsuarioController {
             throw new ValidacaoException("O usuário não pode avaliar livros que não possui ou inativos");
         }
         var livroUsuario = livroUsuarioRepository.getReferenceById(dados.id());
+        var usuarioAutenticado = usuarioRepository.getUsuarioByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        validadoresClientes.forEach(validador -> validador.validarCliente(usuarioAutenticado.getId()));
+        if(livroUsuario.getUsuario().getId() != usuarioAutenticado.getId()) {
+            throw new ValidacaoException("O usuário não pode avaliar livros de outros clientes");
+        }
+
         livroUsuario.atualizarInformacoes(dados);
         return ResponseEntity.ok().body(new DadosListagemLivroUsuario(livroUsuario));
     }
 
+    @Secured("ROLE_FUNCIONARIO")
     @DeleteMapping("/livro_usuario/id={id}")
     @Transactional
     public ResponseEntity inativarLivroUsuario(@PathVariable Integer id) {

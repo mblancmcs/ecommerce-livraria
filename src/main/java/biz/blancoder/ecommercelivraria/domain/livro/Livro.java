@@ -27,6 +27,7 @@ public class Livro {
     private BigDecimal preco = new BigDecimal(0);
     private String descricao;
     private LocalDate dataCadastro;
+    private Long isbn;
     private Boolean ativo;
 
     public Livro(DadosCadastroLivro dados) {
@@ -35,6 +36,7 @@ public class Livro {
         this.preco = dados.preco();
         this.descricao = dados.descricao();
         this.dataCadastro = LocalDate.now();
+        this.isbn = dados.isbn();
         this.ativo = true;
     }
 
@@ -50,6 +52,9 @@ public class Livro {
         }
         if(dados.descricao() != null) {
             this.descricao = dados.descricao();
+        }
+        if(dados.isbn() != null) {
+            this.isbn = dados.isbn();
         }
     }
 

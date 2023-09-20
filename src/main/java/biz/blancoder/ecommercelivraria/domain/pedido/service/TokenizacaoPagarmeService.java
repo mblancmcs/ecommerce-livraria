@@ -30,12 +30,12 @@ public class TokenizacaoPagarmeService {
         TokensController tokensController = client.getTokensController();
         CreateTokenRequest request = new CreateTokenRequest.Builder("card", new CreateCardTokenRequest.Builder(
                 dados.numero(),
-                pedido.getUsuario().getNome(),
+                dados.nome(),
                 dados.mesExpiracao(),
                 dados.anoExpiracao(),
                 dados.cvv(),
                 null,
-                "EBOOKS").build()
+                "ELibrary").build()
         ).build();
 
         try {

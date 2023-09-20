@@ -63,14 +63,7 @@ public class PedidoService {
             throw new ValidacaoException("Processo de pagamento já iniciado ou concluido");
         }
 
-        JsonNode jsonPagarme;
-        if(formaPagamento == "cartao") {
-            jsonPagarme = pagarmeService.pagamento(jsonPagamento, "cartao", pedido);
-        } else if(formaPagamento == "boleto") {
-            jsonPagarme = pagarmeService.pagamento(jsonPagamento, "boleto", pedido);
-        } else {
-            jsonPagarme = pagarmeService.pagamento(jsonPagamento, "pix", pedido);
-        }
+        JsonNode jsonPagarme = pagarmeService.pagamento(jsonPagamento, formaPagamento, pedido);
         pedido.atualizarInformacoes(jsonPagarme.get("id").asText(), jsonPagarme.get("status").asText());
 
         if(pedido.getStatus().equals("pago")) {
