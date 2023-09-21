@@ -96,9 +96,9 @@ public class PedidoController {
     }
 
     @Secured("ROLE_CLIENTE")
-    @PostMapping("/cartao_credito")
+    @PostMapping("/pagamento/cartao_credito")
     @Transactional
-    public ResponseEntity pagamentoPedidoCartao(@RequestBody @Valid DadosPagamentoPedidoCartao dados, UriComponentsBuilder uriBuilder) throws IOException {
+    public ResponseEntity pagamentoPedidoCartao(@RequestBody @Valid DadosPagamentoPedidoCartao dados) throws IOException {
         if(pedidoRepository.existsByIdAndAtivoTrue(dados.idPedido())) {
             var pedidoRequisicao = pedidoRepository.getReferenceById(dados.idPedido());
             validadoresCliente.forEach(validador -> validador.validarCliente(pedidoRequisicao.getUsuario().getId()));
@@ -106,14 +106,13 @@ public class PedidoController {
 
         var jsonString = new ObjectMapper().writeValueAsString(dados.pagamento());
         var pedido = pedidoService.realizarPagamento(dados.idPedido(), "cartao", jsonString);
-        var uri = uriBuilder.path("/pedido/id={id}").buildAndExpand(pedido.getId()).toUri();
-        return ResponseEntity.created(uri).body(new DadosListagemPedido(pedido));
+        return ResponseEntity.ok(new DadosListagemPedido(pedido));
     }
 
     @Secured("ROLE_CLIENTE")
-    @PostMapping("/boleto")
+    @PostMapping("/pagamento/boleto")
     @Transactional
-    public ResponseEntity pagamentoPedidoBoleto(@RequestBody @Valid DadosPagamentoPedidoBoleto dados, UriComponentsBuilder uriBuilder) throws IOException {
+    public ResponseEntity pagamentoPedidoBoleto(@RequestBody @Valid DadosPagamentoPedidoBoleto dados) throws IOException {
         if(pedidoRepository.existsByIdAndAtivoTrue(dados.idPedido())) {
             var pedidoRequisicao = pedidoRepository.getReferenceById(dados.idPedido());
             validadoresCliente.forEach(validador -> validador.validarCliente(pedidoRequisicao.getUsuario().getId()));
@@ -121,14 +120,13 @@ public class PedidoController {
 
         var jsonString = new ObjectMapper().writeValueAsString(dados.pagamento());
         var pedido = pedidoService.realizarPagamento(dados.idPedido(), "boleto", jsonString);
-        var uri = uriBuilder.path("/pedido/id={id}").buildAndExpand(pedido.getId()).toUri();
-        return ResponseEntity.created(uri).body(new DadosListagemPedido(pedido));
+        return ResponseEntity.ok(new DadosListagemPedido(pedido));
     }
 
     @Secured("ROLE_CLIENTE")
-    @PostMapping("/pix")
+    @PostMapping("/pagamento/pix")
     @Transactional
-    public ResponseEntity pagamentoPedidoPix(@RequestBody @Valid DadosPagamentoPedidoPix dados, UriComponentsBuilder uriBuilder) throws IOException {
+    public ResponseEntity pagamentoPedidoPix(@RequestBody @Valid DadosPagamentoPedidoPix dados) throws IOException {
         if(pedidoRepository.existsByIdAndAtivoTrue(dados.idPedido())) {
             var pedidoRequisicao = pedidoRepository.getReferenceById(dados.idPedido());
             validadoresCliente.forEach(validador -> validador.validarCliente(pedidoRequisicao.getUsuario().getId()));
@@ -136,8 +134,7 @@ public class PedidoController {
 
         var jsonString = new ObjectMapper().writeValueAsString(dados.pagamento());
         var pedido = pedidoService.realizarPagamento(dados.idPedido(), "pix", jsonString);
-        var uri = uriBuilder.path("/pedido/id={id}").buildAndExpand(pedido.getId()).toUri();
-        return ResponseEntity.created(uri).body(new DadosListagemPedido(pedido));
+        return ResponseEntity.ok(new DadosListagemPedido(pedido));
     }
 
     @PostMapping("/webhook_atualizar")
