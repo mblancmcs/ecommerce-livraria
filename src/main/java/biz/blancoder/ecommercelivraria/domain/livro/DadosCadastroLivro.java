@@ -1,9 +1,6 @@
 package biz.blancoder.ecommercelivraria.domain.livro;
 
-import biz.blancoder.ecommercelivraria.domain.usuario.Usuario;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
@@ -16,6 +13,7 @@ public record DadosCadastroLivro(
         BigDecimal preco,
         String descricao,
         @Digits(integer = 13, fraction = 0)
+        @NotNull
         Long isbn
 ) {
 }

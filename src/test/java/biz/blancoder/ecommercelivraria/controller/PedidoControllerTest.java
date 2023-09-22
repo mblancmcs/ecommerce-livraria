@@ -72,8 +72,8 @@ class PedidoControllerTest {
                 "RJ", 11211333, "complemento");
         List<String> telefones = Arrays.asList("5521912345678", "5521987654321");
 
-        var usuario = new Usuario(2, "Marcelo", 11122233344l, "marcelo@test.com.br", telefones,
-                endereco, "marcelo_cliente", "$2y$10$9uBv2zwqrHy8UnNIuKc3juRVy.GH5DljmHRpbmvmiRT.e8ZGKZtEi",
+        var usuario = new Usuario(2, "User Cliente", 11122233344l, "user@cliente.com.br", telefones,
+                endereco, "user_cliente", "$2y$10$9uBv2zwqrHy8UnNIuKc3juRVy.GH5DljmHRpbmvmiRT.e8ZGKZtEi",
                 PerfilUsuario.CLIENTE, true
         );
         // Forçando a autenticacao do usuário para passar numa validacao de autenticacao

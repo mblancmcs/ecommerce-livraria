@@ -59,6 +59,9 @@
 			<groupId>PagarmeApiSDKLib</groupId>
 			<artifactId>pagarme-api-sdklib</artifactId>
 			<version>6.8.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/dependencies/pagarme-api-sdklib-6.8.0.jar</systemPath>
+			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>io.apimatic</groupId>
@@ -115,6 +118,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<includeSystemScope>true</includeSystemScope>
 				</configuration>
 			</plugin>
 		</plugins>
