@@ -13,7 +13,7 @@ API Rest de e-commerce para livrarias, com integração ao gateway de pagamentos
 - MySQL: SGBD (Sistema Gerenciador de Banco de dados) usual com aplicações Java.
 - Maven: gerenciador de dependências.
 - SpringDoc: utiliza do padrão OpenAPI para documentar de forma automática o projeto, e com a melhor visualização pelo Swagger.
-- PagarmeApiSDK: necessário para realizar a tokenização do cartão de crédito.
+- PagarmeApiSDK: utilizado para realizar a tokenização do cartão de crédito.
 
 ## Requisitos
 - Java (JRE ou JDK) - versão 17 (LTS).
@@ -38,13 +38,14 @@ java -Dspring.profiles.active=prod -DDATASOURCE_URL=jdbc:mysql://localhost:3306/
 
 ## E-Library
 
-### Acesso e endpoints
+### Autenticação e autorização
 Usuário: admin
 
 Senha: 123456
 
 - Ao acessar com o usuário administrador, é possível cadastrar novos com os acessos de: "CLIENTE", "FUNCIONARIO" ou "ADMIN", pelo seu respectivo endpoint: auth/admin/registrar.
-- O cliente terá alguns endpoints compartilhados com o funcionário e administrador, além de seus exclusivos.
+- O cliente terá algumas autorizações em comum com o funcionário e administrador, além de endpoints exclusivos.
+- O funcionário terá as autorizações que forem necessárias, sendo algumas em comum com o cliente e administrador.
 - O administrador terá seus endpoints exclusivos, assim como todos pertencentes ao funcionário.
 
 Obs.: Além do usuário administrador, também foi criado um cliente (user_cliente) e funcionário (user_funcionario) com a mesma senha do usuário admin: 123456, para que se for preciso, facilite / agilize os testes da aplicação.
