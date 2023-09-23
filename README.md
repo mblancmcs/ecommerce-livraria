@@ -1,6 +1,6 @@
 # E-Library
 
-API Rest de e-commerce para livrarias, com integração ao gateway de pagamentos da Pagar.me e desenvolvida em Java e o framework Spring.
+API Rest de e-commerce para livrarias, com integração ao gateway de pagamentos da Pagar.me e seu webhook; desenvolvida em Java e com o framework Spring.
 
 ## Stack
 - Java 17: versão Long-term Support (LTS) até aproximadamente setembro de 2029.
@@ -13,7 +13,7 @@ API Rest de e-commerce para livrarias, com integração ao gateway de pagamentos
 - MySQL: SGBD (Sistema Gerenciador de Banco de dados) usual com aplicações Java.
 - Maven: gerenciador de dependências.
 - SpringDoc: utiliza do padrão OpenAPI para documentar de forma automática o projeto, e com a melhor visualização pelo Swagger.
-- PagarmeApiSDK: necessário para realizar a tokenização de cartão de crédito.
+- PagarmeApiSDK: necessário para realizar a tokenização do cartão de crédito.
 
 ## Requisitos
 - Java (JRE ou JDK) - versão 17 (LTS).
